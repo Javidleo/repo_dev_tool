@@ -1,7 +1,15 @@
 ﻿namespace repo.Tools
 {
-    public static class Convertor
+    public static class Helper
     {
+        public static void AddArgumentSwitches(this Dictionary<string,string> argumentSwitchList, string @switch,string value)
+        {
+            var argumentSwitch = Repo.validArgumentSwitches.FirstOrDefault(i => i == @switch);
+
+            if (argumentSwitch is not null)
+                argumentSwitchList.Add(argumentSwitch,value);
+        }
+
         public static string ToBaseSwitch(this string @switch)
         {
             if (string.IsNullOrEmpty(@switch))

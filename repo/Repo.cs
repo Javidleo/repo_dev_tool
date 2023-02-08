@@ -1,4 +1,5 @@
-﻿using repo.Models;
+﻿using repo.Exceptions;
+using repo.Models;
 using repo.Tools;
 using System;
 using System.Collections.Generic;
@@ -11,31 +12,67 @@ namespace repo
 {
     public class Repo
     {
-        public static AppConfig config = null;
-        public static List<Command> commands = null;
+        public static AppConfig config = new();
+        public static List<Command> commands = new();
+        public static readonly List<string> validArgumentSwitches = new() { "--folder", "--path", "--name" };
+        private readonly CommandHandler _commandHandler = new();
+        private readonly Initializer _initializer = new Initializer();
         public void Init(string[] args)
         {
-            SetCommandAllies();
-
-            Initializer.SetupCommands();
+             // setup commands and command allies
 
             string command = GetCommand(args);
-            string[] switches = GetSwitches(args);
+            if (!VerifyCommand(command))
+                throw new InvalidCommandException($"Command {command} is not recognized in Applciation");
+
+            var switches = GetSwitches(args);
+
+            var checkCommandSwitch = VerifyCommandSwitches(command, switches);
+            if (!checkCommandSwitch.verified)
+                throw new InvalidSwitchException($"the command : {command} does'nt have any implimentation for {checkCommandSwitch.badSwitch}");
+
+            ProccessCommand(command, switches.argumentSwitches,switches.switches);
         }
 
-        
-
-        private void SetCommandAllies()
+        private void ProccessCommand(string command, Dictionary<string, string> argumentSwitches, string[] switches)
         {
-            config = new AppConfig();
+            switch (command)
+            {
+                case ("repository"): _commandHandler.Repository(argumentSwitches, switches); break;
 
-            config.CommandAllies.Inject("repository", "repo", "rep");
+                case ("mapping"): _commandHandler.Mapping(argumentSwitches, switches); break;
 
-            config.CommandAllies.Inject("mapping", "map");
+                case ("command"): _commandHandler.Command(argumentSwitches, switches); break;
 
-            config.CommandAllies.Inject("command", "com");
+                case ("query"): _commandHandler.Query(argumentSwitches, switches); break;
 
-            config.CommandAllies.Inject("query", "q");
+                default: throw new InvalidCommandException("invalid command name");
+            }
+        }
+
+        private (bool verified, string badSwitch) VerifyCommandSwitches(string commandName, (Dictionary<string, string> argumentSwitches, string[] switches) switches)
+        {
+            var commandFullName = config.CommandAllies.FirstOrDefault(i => i.Key == commandName).Value;
+
+            var command = commands.FirstOrDefault(i => i.title == commandFullName);
+            if (switches.argumentSwitches != null)
+            {
+                foreach (var @switch in switches.argumentSwitches)
+                {
+                    if (!command.switches.Any(i => i.title == @switch.Key))
+                        return (false, @switch.Key);
+                }
+            }
+            if (switches.switches != null)
+            {
+                foreach (var @switch in switches.switches)
+                {
+                    if (!command.switches.Any(i => i.title == @switch))
+                        return (false, @switch);
+                }
+            }
+            return (verified: true, badSwitch: "");
+
         }
 
         public string GetCommand(string[] args)
@@ -44,30 +81,33 @@ namespace repo
             return args[0].Trim().ToLower();
         }
 
-        public string[] GetSwitches(string[] args)
+        public (Dictionary<string, string> argumentSwitches, string[] switches) GetSwitches(string[] args)
         {
-            if (args is null || args.Length == 0) return new string[] { };
+            if (args is null || args.Length == 0)
+                throw new ArgumentNullException("empty argument");
 
             List<string> switchList = new();
-
-            for(int i = 1; i < args.Length; i++) // start from 1 because the first element is the command it self;
+            Dictionary<string, string> argumentSwitches = new();
+            for (int i = 1; i < args.Length; i++) // start from 1 because the first element is the command itself;
             {
                 if (args[i].StartsWith("--"))
                 {
+                    argumentSwitches.AddArgumentSwitches(args[i], args[i++]);
                     switchList.Add(args[i]);
                 }
                 else if (args[i].StartsWith("-"))
                 {
                     args[i] = args[i].ToBaseSwitch();
+                    argumentSwitches.AddArgumentSwitches(args[i], args[i++]);
                     switchList.Add(args[i]);
                 }
             }
-            return switchList.ToArray();
+            return (argumentSwitches, switchList.ToArray());
         }
 
-        public void InitilizeForTest()
+        public bool VerifyCommand(string inputCommand)
         {
-            throw new NotImplementedException();
+            return Repo.config.CommandAllies.ContainsKey(inputCommand);
         }
     }
 }

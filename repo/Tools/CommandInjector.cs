@@ -11,13 +11,13 @@
             commandAllies.Add(ally, command);
             commandAllies.Add(ally2, command);
         }
-        public static void Inject(Dictionary<string, string> commandAllies, string command, string ally, string ally2, string ally3)
+        public static void Inject(this Dictionary<string, string> commandAllies, string command, string ally, string ally2, string ally3)
         {
             commandAllies.Add(ally, command);
             commandAllies.Add(ally2, command);
             commandAllies.Add(ally3, command);
         }
-        public static void Inject(Dictionary<string, string> commandAllies, string command, string ally, string ally2, string ally3,string ally4)
+        public static void Inject(this Dictionary<string, string> commandAllies, string command, string ally, string ally2, string ally3,string ally4)
         {
             commandAllies.Add(ally, command);
             commandAllies.Add(ally2, command);

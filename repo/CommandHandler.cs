@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace repo
+﻿namespace repo
 {
     public class CommandHandler
     {
-        public void Repository()
+
+        public void Repository(Dictionary<string, string> argumentSwitches, string[] switches)
         {
 
         }
-        public void Mapping()
+        public void Mapping(Dictionary<string, string> argumentSwitches, string[] switches)
         {
 
         }
-        public void Command()
+        public void Command(Dictionary<string, string> argumentSwitches, string[] switches)
         {
 
         }
-        public void Query()
+        public void Query(Dictionary<string, string> argumentSwitches, string[] switches)
         {
 
         }

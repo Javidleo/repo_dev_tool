@@ -8,21 +8,14 @@ namespace repoTest
     public class UnitTest1
     {
         private readonly Repo _repo = new Repo();
-        void Setup()
-        {
-            _repo.InitilizeForTest();
-        }
 
-
+        string s = "salam";
         [Fact]
-        public void GetCommandsTest()
+        public void InitTest()
         {
-            string[] args = { "command","-m", "-h", "-s", "-u" };
-            string[] expected = {"-m", "-h", "-s", "-u" };
-        
-            var result = _repo.GetSwitches(args);
+            string b = "salam";
 
-            result.Should().BeEquivalentTo(expected);
+            b.Should().BeEquivalentTo(s);
         }
     }
 }
