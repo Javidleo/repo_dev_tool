@@ -3,9 +3,21 @@ using repo;
 using repo.Exceptions;
 using System.Data;
 
+//string[] s = { "command", "--name" };
+//if (s[1].StartsWith('-') || s[0].StartsWith('-')) throw new Exception("eee");
 var repo = new Repo();
 try
 {
+    args = new string[] { "command", "-n","javidLeo" };
+    string argsContent = "";
+    int i = 0;
+    foreach(var item in args)
+    {
+        argsContent += item +$" /";
+        i++;
+    }
+    if (argsContent is "") File.WriteAllText("D:\\Projects\\Self\\repo_dev_tool\\repo\\log.txt", "Empty args");
+    File.WriteAllText("D:\\Projects\\Self\\repo_dev_tool\\repo\\log.txt","1: Get Args => "+argsContent + Environment.NewLine);
     repo.Init(args);
 
 }
@@ -27,7 +39,7 @@ void HandleException(Exception ex)
             ExceptionWriter(typeof(InvalidCommandException), ex.Message);
             break;
 
-        default: ExceptionWriter(typeof(Exception), "internal system error, please report this error to author");
+        default: ExceptionWriter(typeof(Exception), ex.Message);
             break;
     }
 }

@@ -1,12 +1,8 @@
 ﻿using repo.Exceptions;
+using repo.Handlers;
 using repo.Models;
 using repo.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace repo
 {
@@ -15,36 +11,84 @@ namespace repo
         public static AppConfig config = new();
         public static List<Command> commands = new();
         public static readonly List<string> validArgumentSwitches = new() { "--folder", "--path", "--name" };
-        private readonly CommandHandler _commandHandler = new();
         private readonly Initializer _initializer = new Initializer();
+        private IHandler _handler;
         public void Init(string[] args)
         {
-             // setup commands and command allies
+            // setup commands and command allies
+            var requestType = _initializer.Startup(args);
 
             string command = GetCommand(args);
             if (!VerifyCommand(command))
                 throw new InvalidCommandException($"Command {command} is not recognized in Applciation");
 
-            var switches = GetSwitches(args);
+            switch (requestType)
+            {
+                case RequestType.Normal:
+                    NormalRequestHandler(command, args);
+                    break;
 
-            var checkCommandSwitch = VerifyCommandSwitches(command, switches);
+                case RequestType.Shortcut:
+                    ShortcutRequestHandler(command, args);
+                    break;
+            }
+        }
+
+        private void ShortcutRequestHandler(string command, string[] args)
+        {
+            args = args.GetArguments();
+
+            switch (command)
+            {
+                case ("repository"): _handler = new RepositoryHandler();
+                    _handler.ShortCut(command, args);
+                    break;
+
+                case ("mapping"): _handler = new MappingHandler();
+                    _handler.ShortCut(command, args);
+                    break;
+
+                case ("command"): _handler = new CommandHandler();
+                    _handler.ShortCut(command,args);
+                    break;
+
+                case ("query"): _handler = new QueryHandler();
+                    _handler.ShortCut(command,args);
+                    break;
+
+                default: throw new InvalidCommandException("invalid command name");
+            }
+        }
+
+        private void NormalRequestHandler(string command, string[]args)
+        {
+            var switchList = GetSwitches(args);
+
+            var checkCommandSwitch = VerifyCommandSwitches(command, switchList);
             if (!checkCommandSwitch.verified)
                 throw new InvalidSwitchException($"the command : {command} does'nt have any implimentation for {checkCommandSwitch.badSwitch}");
 
-            ProccessCommand(command, switches.argumentSwitches,switches.switches);
-        }
-
-        private void ProccessCommand(string command, Dictionary<string, string> argumentSwitches, string[] switches)
-        {
             switch (command)
             {
-                case ("repository"): _commandHandler.Repository(argumentSwitches, switches); break;
+                case ("repository"):
+                    _handler = new RepositoryHandler();
+                    _handler.Handle(command,switchList.argumentSwitches,switchList.switches);
+                    break;
 
-                case ("mapping"): _commandHandler.Mapping(argumentSwitches, switches); break;
+                case ("mapping"):
+                    _handler = new MappingHandler();
+                    _handler.Handle(command, switchList.argumentSwitches, switchList.switches); 
+                    break;
 
-                case ("command"): _commandHandler.Command(argumentSwitches, switches); break;
+                case ("command"):
+                    _handler = new CommandHandler();
+                    _handler.Handle(command, switchList.argumentSwitches, switchList.switches);
+                    break;
 
-                case ("query"): _commandHandler.Query(argumentSwitches, switches); break;
+                case ("query"):
+                    _handler = new QueryHandler();
+                    _handler.Handle(command, switchList.argumentSwitches, switchList.switches);
+                    break;
 
                 default: throw new InvalidCommandException("invalid command name");
             }
@@ -78,7 +122,9 @@ namespace repo
         public string GetCommand(string[] args)
         {
             if (args is null || args.Length == 0) return "";
-            return args[0].Trim().ToLower();
+
+            string command = args[0].Trim().ToLower();
+            return command;
         }
 
         public (Dictionary<string, string> argumentSwitches, string[] switches) GetSwitches(string[] args)
@@ -97,7 +143,7 @@ namespace repo
                 }
                 else if (args[i].StartsWith("-"))
                 {
-                    args[i] = args[i].ToBaseSwitch();
+                    args[i] = args[i].ToBaseSwitch(args[0]);
                     argumentSwitches.AddArgumentSwitches(args[i], args[i++]);
                     switchList.Add(args[i]);
                 }

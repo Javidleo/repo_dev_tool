@@ -1,38 +1,60 @@
-﻿using repo.Models;
+﻿using repo.Exceptions;
+using repo.Models;
 using repo.Tools;
-using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace repo
 {
     public class Initializer
     {
-        public string[] Startup(string[] args)
+        private List<Command> commands = new List<Command>();
+
+        public RequestType Startup(string[] args)
         {
-            var validArgs = CheckInput(args);
+            if (HasSpecialChar(args))
+                throw new InvalidInputException("input should not contains special characters");
+
+            var requestType = GetRequestType(args);
+
             SetCommandAllies();
             SetupCommands();
-            return validArgs;
+            return requestType;
         }
 
-        private string[] CheckInput(string[] args)
+        private  RequestType GetRequestType(string[] args)
         {
+            if (args[1].StartsWith("-")) 
+                return RequestType.Normal;
 
-            return new string[] { };
+            else
+                return RequestType.Shortcut;
         }
 
-        private static List<Command> commands = new List<Command>();
-        
+        private bool HasSpecialChar(string[] args)
+        {
+            if (args is null || args.Length == 0)
+                throw new ArgumentNullException("invalid input");
+
+            var arguments = string.Join(" ", args);
+
+            if (Regex.IsMatch(arguments, @"^[a-zA-Z0-9][\s \b \t /\-_.]*$"))
+                return true;
+
+            return false;
+        }
+
+
         public void SetCommandAllies()
         {
             Repo.config = new AppConfig();
 
-            Repo.config.CommandAllies.Inject("repository", "repo", "rep", "r");
+            Repo.config.CommandAllies.Inject("repository", "repo", "rep", "r","repository");
 
-            Repo.config.CommandAllies.Inject("mapping", "map", "m");
+            Repo.config.CommandAllies.Inject("mapping", "map", "m","mapping");
 
-            Repo.config.CommandAllies.Inject("command", "com", "c");
+            Repo.config.CommandAllies.Inject("command", "com", "c","command");
 
-            Repo.config.CommandAllies.Inject("query", "q");
+            Repo.config.CommandAllies.Inject("query", "q","query");
         }
 
         public void SetupCommands()
