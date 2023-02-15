@@ -15,7 +15,7 @@ namespace repo.Handlers
 
         public void ShortCut(string command, string[] args)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

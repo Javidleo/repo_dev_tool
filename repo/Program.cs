@@ -1,24 +1,22 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using repo;
 using repo.Exceptions;
+using repo.Generator.Common;
+using repo.Generator.Mapping;
 using System.Data;
 
 //string[] s = { "command", "--name" };
 //if (s[1].StartsWith('-') || s[0].StartsWith('-')) throw new Exception("eee");
 var repo = new Repo();
+
 try
 {
-    args = new string[] { "command", "-n","javidLeo" };
-    string argsContent = "";
-    int i = 0;
-    foreach(var item in args)
-    {
-        argsContent += item +$" /";
-        i++;
-    }
-    if (argsContent is "") File.WriteAllText("D:\\Projects\\Self\\repo_dev_tool\\repo\\log.txt", "Empty args");
-    File.WriteAllText("D:\\Projects\\Self\\repo_dev_tool\\repo\\log.txt","1: Get Args => "+argsContent + Environment.NewLine);
-    repo.Init(args);
+    var inputs = new List<ItemInput>();
+    inputs.Add(new ItemInput(typeof(int), "id"));
+    MappingGenerator generator = new MappingGenerator("Admin", inputs);
+    generator.Build();
+    args = new string[] { "command", "-n", "New" };
+    //repo.Init(args);
 
 }
 catch (Exception ex)

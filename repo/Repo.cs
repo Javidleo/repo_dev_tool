@@ -13,9 +13,10 @@ namespace repo
         public static readonly List<string> validArgumentSwitches = new() { "--folder", "--path", "--name" };
         private readonly Initializer _initializer = new Initializer();
         private IHandler _handler;
+
+
         public void Init(string[] args)
         {
-            // setup commands and command allies
             var requestType = _initializer.Startup(args);
 
             string command = GetCommand(args);
@@ -138,14 +139,17 @@ namespace repo
             {
                 if (args[i].StartsWith("--"))
                 {
-                    argumentSwitches.AddArgumentSwitches(args[i], args[i++]);
+                    argumentSwitches.AddArgumentSwitches(args[i], args[i+1] );
                     switchList.Add(args[i]);
                 }
                 else if (args[i].StartsWith("-"))
                 {
                     args[i] = args[i].ToBaseSwitch(args[0]);
-                    argumentSwitches.AddArgumentSwitches(args[i], args[i++]);
-                    switchList.Add(args[i]);
+                    var isArgumentSwitch = argumentSwitches.AddArgumentSwitches(args[i], args[i+1]);
+                    if (!isArgumentSwitch)
+                    {
+                        switchList.Add(args[i]);
+                    }
                 }
             }
             return (argumentSwitches, switchList.ToArray());

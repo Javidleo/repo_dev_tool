@@ -4,12 +4,16 @@ namespace repo.Tools
 {
     public static class Helper
     {
-        public static void AddArgumentSwitches(this Dictionary<string, string> argumentSwitchList, string @switch, string value)
+        public static bool AddArgumentSwitches(this Dictionary<string, string> argumentSwitchList, string @switch, string value)
         {
             var argumentSwitch = Repo.validArgumentSwitches.FirstOrDefault(i => i == @switch);
 
             if (argumentSwitch is not null)
+            {
                 argumentSwitchList.Add(argumentSwitch, value);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

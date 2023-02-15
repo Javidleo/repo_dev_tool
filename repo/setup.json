@@ -1,0 +1,32 @@
+﻿
+  {
+    "GlobalSetup": {
+      "serviceNameSpace": "",
+      "dbContextNameSpace": "",
+      "domainModelNameSpace": ""
+    },
+
+    "RepositorySetup": {
+      "useGeneric": true,
+      "dataAccessNameSpace": "",
+      "serviceNameSpace": "",
+      "path": ""
+
+    },
+
+    "MappingSetup": {
+      "mappingNameSpace": "",
+      "path": "D:\\Projects\\test"
+    },
+
+    "CommandSetup": {
+      "commandNameSpace": "",
+      "path": ""
+
+    },
+
+    "QuerySetup": {
+      "queryNameSpace": "",
+      "path": ""
+    }
+  }  

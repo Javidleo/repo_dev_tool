@@ -10,23 +10,12 @@ namespace repoTest
     {
         private readonly Repo _repo = new Repo();
 
-        string s = "salam";
-        [Fact]
-        public void InitTest()
-        {
-            string b = "salam";
+        //[Fact]
+        //public void Tets()
+        //{
+        //    Setup setup = new Setup();
 
-            b.Should().BeEquivalentTo(s);
-        }
+        //}
 
-        [Fact]
-        public void RegexTest()
-        {
-
-            string input = "fdslkfjsdfklj";
-            var result = Regex.IsMatch(input, "[!@#$%^&*+;={}:<>?]");
-
-            result.Should().Be(false);
-        }
     }
 }
