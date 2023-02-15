@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using repo.Generator.Common;
-using static System.Runtime.InteropServices.RuntimeEnvironment;
+﻿using repo.Generator.Common;
 
 namespace repo.Generator.Command
 {
@@ -26,25 +18,27 @@ namespace repo.Generator.Command
             throw new NotImplementedException();
         }
 
-       
-        public (string[]command,string[]commandHandler) WriteFile()
+
+        public (string[] command, string[] commandHandler) WriteFile()
         {
             List<string> fileList = new();
 
             var command = WriteCommand();
             var commandHandler = WriteCommandHanlder();
 
-            return(command,commandHandler);
+            return (command, commandHandler);
         }
 
         private string[] WriteCommandHanlder()
         {
             List<string> handlerList = new List<string>();
             string input = "";
-            foreach (var item in _template.inputs)
+            if (_template.Inputs is not null)
             {
-                input += $"{item.type} {item.name}, ";
+                foreach (var item in _template.Inputs)
+                    input += $"{item.type} {item.name}, ";
             }
+
             handlerList.AddRange(new string[]
             {
                 "using System;",
@@ -56,21 +50,23 @@ namespace repo.Generator.Command
                 newLine,
                 $"namespace {_setup.CommandSetup.commandNameSpace};",
                 newLine,
-                $"  public class {_template.domainName}CommandHandler : IRequestHandler<{_template.domainName}Command>",
+                $"  public class {_template.DomainName}CommandHandler : IRequestHandler<{_template.DomainName}Command>",
                 "   {",
                 ""
-            }) ;
+            });
             return handlerList.ToArray();
         }
 
         private string[] WriteCommand()
         {
             List<string> commandList = new List<string>();
-            string input = "";
-            foreach (var item in _template.inputs)
+            string input = string.Empty;
+            if (_template.Inputs is not null)
             {
-                input += $"{item.type} {item.name}, ";
+                foreach (var item in _template.Inputs)
+                    input += $"{item.type} {item.name}, ";
             }
+
             commandList.AddRange(new string[]
             {
                 "using System;",
@@ -81,7 +77,7 @@ namespace repo.Generator.Command
                 newLine,
                 $"namespace {_setup.CommandSetup.commandNameSpace};",
                 newLine,
-                $"public record {_template.domainName}Command({input});"
+                $"public record {_template.DomainName}Command({input});"
             });
             return commandList.ToArray();
         }

@@ -6,6 +6,6 @@
         {
             CommandAllies = new();
         }
-        public Dictionary<string,string> CommandAllies { get; set; }
+        public Dictionary<string, string> CommandAllies { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace repo
 {
@@ -13,19 +12,19 @@ namespace repo
 
         public Setup()
         {
-            
+
 
         }
         public static Setup Init()
         {
             var setupJson = File.ReadAllText(AppContext.BaseDirectory + @"\setup.json");
-            var setup =  JsonConvert.DeserializeObject<Setup>(setupJson);
+            var setup = JsonConvert.DeserializeObject<Setup>(setupJson);
 
             return setup;
         }
     }
 
-    public record GlobalSetup(string serviceNameSpace, string dbContextNameSpace, string domainModelNameSpace,string path);
+    public record GlobalSetup(string serviceNameSpace, string dbContextNameSpace, string domainModelNameSpace, string path);
 
     public record RepositorySetup(bool useGeneric, string dataAccessNameSpace, string serviceNameSpace, string path);
 

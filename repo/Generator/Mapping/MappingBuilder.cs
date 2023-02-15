@@ -2,24 +2,27 @@
 
 namespace repo.Generator.Mapping
 {
-    public class MappingGenerator 
+    public class MappingBuilder
     {
         private ItemTemplate _template;
         private string newLine = Environment.NewLine;
         private Setup _setup = Setup.Init();
-        public MappingGenerator(string domainName, List<ItemInput> inputs)
+
+
+        public MappingBuilder Once(string domainName)
         {
-            _template = new ItemTemplate(domainName, inputs);
+            _template = new ItemTemplate(domainName);
+            return this;
         }
 
-        public void Build()
+        public void BuildOne()
         {
-            var stringFile = WriteFile();
+            var stringFile = Write();
 
-            File.WriteAllLines(_setup.MappingSetup.path+$"\\{_template.domainName}Mapping.cs", stringFile);
+            File.WriteAllLines(_setup.MappingSetup.path + $"\\{_template.DomainName}Mapping.cs", stringFile);
         }
 
-        public string[] WriteFile()
+        private string[] Write()
         {
             var list = new List<string>();
 
@@ -35,13 +38,12 @@ namespace repo.Generator.Mapping
                 newLine,
                 $"namespace {_setup.MappingSetup.mappingNameSpace};",
                 newLine,
-                $"public class {_template.domainName}Mapping : IEntityTypeConfiguration<{_template.domainName}>",
+                $"public class {_template.DomainName}Mapping : IEntityTypeConfiguration<{_template.DomainName}>",
                 "{",
-                $"  public void Configure(EntityTypeBuilder<{_template.domainName}> builder)",
+                $"   public void Configure(EntityTypeBuilder<{_template.DomainName}> builder)",
                 "   {",
                 "   }",
                 "}",
-
             });
             return list.ToArray();
         }

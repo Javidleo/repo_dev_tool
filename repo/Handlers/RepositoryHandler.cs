@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace repo.Handlers
+﻿namespace repo.Handlers
 {
     public class RepositoryHandler : IHandler
     {
@@ -15,7 +9,7 @@ namespace repo.Handlers
 
         public void ShortCut(string command, string[] args)
         {
-            
+
         }
     }
 }

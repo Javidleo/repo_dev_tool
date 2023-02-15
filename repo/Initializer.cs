@@ -1,5 +1,4 @@
-﻿using repo.Exceptions;
-using repo.Models;
+﻿using repo.Models;
 using repo.Tools;
 using System.Text.RegularExpressions;
 
@@ -21,9 +20,9 @@ namespace repo
             return requestType;
         }
 
-        private  RequestType GetRequestType(string[] args)
+        private RequestType GetRequestType(string[] args)
         {
-            if (args[1].StartsWith("-")) 
+            if (args[1].StartsWith("-"))
                 return RequestType.Normal;
 
             else
@@ -48,13 +47,13 @@ namespace repo
         {
             Repo.config = new AppConfig();
 
-            Repo.config.CommandAllies.Inject("repository", "repo", "rep", "r","repository");
+            Repo.config.CommandAllies.Inject("repository", "repo", "rep", "r", "repository");
 
-            Repo.config.CommandAllies.Inject("mapping", "map", "m","mapping");
+            Repo.config.CommandAllies.Inject("mapping", "map", "m", "mapping");
 
-            Repo.config.CommandAllies.Inject("command", "com", "c","command");
+            Repo.config.CommandAllies.Inject("command", "com", "c", "command");
 
-            Repo.config.CommandAllies.Inject("query", "q","query");
+            Repo.config.CommandAllies.Inject("query", "q", "query");
         }
 
         public void SetupCommands()
@@ -73,6 +72,7 @@ namespace repo
                  {
                     new Switch(title : "--name", symbol : "-n", info : "set a name / !!attention!! => dont add mapping to end of name"),
                     new Switch(title : "--database", symbol : "-d", info : "get all tables from your database and create a mapping class for them"),
+                    new Switch(title: "--ef", symbol : "-e", info: "it will create mapping class for all the Domain Models in your Domain Folder")
                  }));
 
             // ------------------------------- Command ------------------------------------- // 

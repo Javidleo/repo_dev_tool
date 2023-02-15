@@ -2,7 +2,6 @@
 using repo.Handlers;
 using repo.Models;
 using repo.Tools;
-using System.Diagnostics;
 
 namespace repo
 {
@@ -38,47 +37,53 @@ namespace repo
         private void ShortcutRequestHandler(string command, string[] args)
         {
             args = args.GetArguments();
+            command = command.ToBaseCommand();
 
             switch (command)
             {
-                case ("repository"): _handler = new RepositoryHandler();
+                case ("repository"):
+                    _handler = new RepositoryHandler();
                     _handler.ShortCut(command, args);
                     break;
 
-                case ("mapping"): _handler = new MappingHandler();
+                case ("mapping"):
+                    _handler = new MappingHandler();
                     _handler.ShortCut(command, args);
                     break;
 
-                case ("command"): _handler = new CommandHandler();
-                    _handler.ShortCut(command,args);
+                case ("command"):
+                    _handler = new CommandHandler();
+                    _handler.ShortCut(command, args);
                     break;
 
-                case ("query"): _handler = new QueryHandler();
-                    _handler.ShortCut(command,args);
+                case ("query"):
+                    _handler = new QueryHandler();
+                    _handler.ShortCut(command, args);
                     break;
 
                 default: throw new InvalidCommandException("invalid command name");
             }
         }
 
-        private void NormalRequestHandler(string command, string[]args)
+        private void NormalRequestHandler(string command, string[] args)
         {
             var switchList = GetSwitches(args);
+            command = command.ToBaseCommand();
 
-            var checkCommandSwitch = VerifyCommandSwitches(command, switchList);
-            if (!checkCommandSwitch.verified)
-                throw new InvalidSwitchException($"the command : {command} does'nt have any implimentation for {checkCommandSwitch.badSwitch}");
+            var (verified, badSwitch) = VerifyCommandSwitches(command, switchList); 
+            if (!verified)
+                throw new InvalidSwitchException($"the command : {command} does'nt have any implimentation for {badSwitch}");
 
             switch (command)
             {
                 case ("repository"):
                     _handler = new RepositoryHandler();
-                    _handler.Handle(command,switchList.argumentSwitches,switchList.switches);
+                    _handler.Handle(command, switchList.argumentSwitches, switchList.switches);
                     break;
 
                 case ("mapping"):
                     _handler = new MappingHandler();
-                    _handler.Handle(command, switchList.argumentSwitches, switchList.switches); 
+                    _handler.Handle(command, switchList.argumentSwitches, switchList.switches);
                     break;
 
                 case ("command"):
@@ -139,13 +144,13 @@ namespace repo
             {
                 if (args[i].StartsWith("--"))
                 {
-                    argumentSwitches.AddArgumentSwitches(args[i], args[i+1] );
+                    argumentSwitches.AddArgumentSwitches(args[i], args[i + 1]);
                     switchList.Add(args[i]);
                 }
                 else if (args[i].StartsWith("-"))
                 {
                     args[i] = args[i].ToBaseSwitch(args[0]);
-                    var isArgumentSwitch = argumentSwitches.AddArgumentSwitches(args[i], args[i+1]);
+                    var isArgumentSwitch = argumentSwitches.AddArgumentSwitches(args[i], args[i + 1]);
                     if (!isArgumentSwitch)
                     {
                         switchList.Add(args[i]);

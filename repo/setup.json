@@ -15,7 +15,7 @@
     },
 
     "MappingSetup": {
-      "mappingNameSpace": "",
+      "mappingNameSpace": "repo.Mapping",
       "path": "D:\\Projects\\test"
     },
 

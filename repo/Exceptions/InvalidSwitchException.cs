@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace repo.Exceptions
+﻿namespace repo.Exceptions
 {
     [Serializable]
     public class InvalidSwitchException : Exception

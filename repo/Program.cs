@@ -3,7 +3,6 @@ using repo;
 using repo.Exceptions;
 using repo.Generator.Common;
 using repo.Generator.Mapping;
-using System.Data;
 
 //string[] s = { "command", "--name" };
 //if (s[1].StartsWith('-') || s[0].StartsWith('-')) throw new Exception("eee");
@@ -11,12 +10,10 @@ var repo = new Repo();
 
 try
 {
-    var inputs = new List<ItemInput>();
-    inputs.Add(new ItemInput(typeof(int), "id"));
-    MappingGenerator generator = new MappingGenerator("Admin", inputs);
-    generator.Build();
-    args = new string[] { "command", "-n", "New" };
-    //repo.Init(args);
+    //MappingBuilder generator = new MappingBuilder();
+    //generator.Once("Admin").BuildOne();
+    args = new string[] { "mapping", "-n","Test" };
+    repo.Init(args);
 
 }
 catch (Exception ex)
@@ -37,12 +34,13 @@ void HandleException(Exception ex)
             ExceptionWriter(typeof(InvalidCommandException), ex.Message);
             break;
 
-        default: ExceptionWriter(typeof(Exception), ex.Message);
+        default:
+            ExceptionWriter(typeof(Exception), ex.Message);
             break;
     }
 }
 
-void ExceptionWriter(Type excpetionType ,string message, string help = "use repo --help / -h to see all commands")
+void ExceptionWriter(Type excpetionType, string message, string help = "use repo --help / -h to see all commands")
 {
     var previousColor = Console.ForegroundColor;
     Console.ForegroundColor = ConsoleColor.Red;
