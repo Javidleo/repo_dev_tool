@@ -88,5 +88,10 @@ namespace repo.Tools
 
             return @switch.title;
         }
+
+        public static string FindType(this Dictionary<string,string> typeDic,string input)
+        {
+            return typeDic.FirstOrDefault(i => i.Key == input).Value;
+        }
     }
 }

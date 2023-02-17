@@ -20,8 +20,8 @@
     },
 
     "CommandSetup": {
-      "commandNameSpace": "",
-      "path": ""
+      "commandNameSpace": "Repo.Commands",
+      "path": "C:\\Data\\Projects\\Self\\Test"
 
     },
 

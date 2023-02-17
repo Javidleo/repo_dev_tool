@@ -10,10 +10,9 @@ var repo = new Repo();
 
 try
 {
-    //MappingBuilder generator = new MappingBuilder();
-    //generator.Once("Admin").BuildOne();
-    args = new string[] { "mapping", "-n","Test" };
+    args = new string[] { "command", "CreateUser", "int", "id", "string", "name", "string", "family", "string", "pass" };
     repo.Init(args);
+    //repo.Init(args);
 
 }
 catch (Exception ex)
