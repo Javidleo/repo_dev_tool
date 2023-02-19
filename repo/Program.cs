@@ -10,6 +10,7 @@ var repo = new Repo();
 
 try
 {
+<<<<<<< HEAD
     ////MappingBuilder generator = new MappingBuilder();
     ////generator.Once("Admin").BuildOne();
     //if (!File.Exists(Environment.CurrentDirectory + @"\setup.json"))
@@ -17,7 +18,11 @@ try
 
     //}
     Setup.GenerateVizardSetup();
+=======
+    args = new string[] { "command", "CreateUser", "int", "id", "string", "name", "string", "family", "string", "pass" };
+>>>>>>> 24a980fcae54cd5f4c94c5512d09a64b91cc623e
     repo.Init(args);
+    //repo.Init(args);
 
 }
 catch (Exception ex)
