@@ -10,9 +10,13 @@ var repo = new Repo();
 
 try
 {
-    //MappingBuilder generator = new MappingBuilder();
-    //generator.Once("Admin").BuildOne();
-    args = new string[] { "mapping", "-n","Test" };
+    ////MappingBuilder generator = new MappingBuilder();
+    ////generator.Once("Admin").BuildOne();
+    //if (!File.Exists(Environment.CurrentDirectory + @"\setup.json"))
+    //{
+
+    //}
+    Setup.GenerateVizardSetup();
     repo.Init(args);
 
 }

@@ -8,7 +8,6 @@ namespace repo.Generator.Mapping
         private string newLine = Environment.NewLine;
         private Setup _setup = Setup.Init();
 
-
         public MappingBuilder Once(string domainName)
         {
             _template = new ItemTemplate(domainName);

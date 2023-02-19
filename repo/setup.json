@@ -1,15 +1,15 @@
 ﻿
   {
     "GlobalSetup": {
-      "serviceNameSpace": "",
-      "dbContextNameSpace": "",
+      "writeDbContextNameSpace": "",
+      "readDbContextNameSpace":"",
       "domainModelNameSpace": ""
     },
 
     "RepositorySetup": {
       "useGeneric": true,
-      "dataAccessNameSpace": "",
-      "serviceNameSpace": "",
+      "implementationNameSpace": "",
+      "interfaceNameSpace": "",
       "path": ""
 
     },
